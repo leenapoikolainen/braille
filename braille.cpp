@@ -6,6 +6,8 @@
 
 using namespace std;
 
+// Function that converst a text into braille & prints it out in ASCII
+// into defined output stream
 void print_braille(const char *text, ostream &out) {
   char braille[100];
   strcpy(braille,"");
@@ -58,6 +60,7 @@ void print_braille(const char *text, ostream &out) {
   out << word;
 }
 
+// Function to encode a text into braille string
 void encode(const char *text, char *braille){
   if (*text == '\0')
     return;
@@ -66,30 +69,24 @@ void encode(const char *text, char *braille){
     strcpy(encoded,"");
     encode_character(*text, encoded);
     strcat(braille, encoded);
-    text++;
-    encode(text, braille);
+    encode(text + 1, braille);
   }
-  /*
-  char encoded[20];
-  while (*text != '\0') {
-    strcpy(encoded, "");
-    encode_character(*text, encoded);
-    strcat(braille, encoded);
-    text++;
-  }
-  */
 }
 
+// Function to encode into braille string and return it's size
 int encode_character(char ch, char *braille){
-  // Empty the braille string first
+  // Ensure the braille string is empty
   strcpy(braille, "");
-  // If it is an alphabet
+
+  // 1. If ch is an alphabet
   if(isalpha(ch)){
+    // Add capital letter braille, if it is a capital letter
     if(isupper(ch)) {
       strcat(braille, ".....O");
     }
-    char lower_ch = tolower(ch);
-    switch (lower_ch) {
+    // Convert to lower
+    ch = tolower(ch);
+    switch (ch) {
     case 'a': strcat(braille, "O....."); break;
     case 'b': strcat(braille, "OO...."); break;
     case 'c': strcat(braille, "O..O.."); break;
@@ -119,6 +116,7 @@ int encode_character(char ch, char *braille){
     }
   }
   if(isdigit(ch)) {
+    // If it is digit, add the digit braille string first
     strcat(braille, "..OOOO");
     switch(ch) {
     case '1': strcat(braille, "O....."); break;
